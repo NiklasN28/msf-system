@@ -488,6 +488,9 @@
   // ============================================================
 
   function updateUI() {
+    // Abbruch wenn noch keine Steps gebaut wurden
+    if (!state.stepEls || !state.stepEls.length) return;
+
     // Steps ein-/ausblenden
     state.stepEls.forEach(function (el, i) {
       el.hidden = i !== state.current;
@@ -601,6 +604,7 @@
 
     // State initialisieren
     state.config = config;
+    state.config.steps = config.steps || []; // Leeres Array als Fallback
     state.current = 0;
     state.data = {};
     state.form = form;
@@ -610,7 +614,11 @@
     updateUI();
     bindEvents();
 
-    console.log("MSF: initialisiert mit", config.steps.length, "Steps.");
+    if (state.config.steps.length === 0) {
+      console.warn("MSF: Keine Steps konfiguriert. Uebergib steps: [...] in MSF.init().");
+    } else {
+      console.log("MSF: initialisiert mit", state.config.steps.length, "Steps.");
+    }
   }
 
   // ============================================================
