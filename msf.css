@@ -1,0 +1,1020 @@
+/* ============================================================
+   MSF — Multi-Step Form  |  msf.css  v1.0
+   ============================================================
+
+   ANLEITUNG: Nur den :root-Block unten anpassen.
+   Alles andere passt sich automatisch an.
+
+   INDEX
+   ──────────────────────────────────────────────────────────
+   1.  Theme Variables     (hier editieren)
+   2.  Reset & Base
+   3.  Form Wrapper
+   4.  Progress – Bar
+   5.  Progress – Dots
+   6.  Progress – Numbers
+   7.  Step Container
+   8.  Step Header (Titel + Beschreibung)
+   9.  Fields – Label & Hint
+   10. Fields – Text, Email, Phone, Textarea
+   11. Fields – Single Choice (Radio)
+   12. Fields – Multi Choice (Checkbox)
+   13. Fields – Validation & Error
+   14. Buttons (Next, Back, Submit)
+   15. Summary Step
+   16. Success Step
+   17. Animationen & Übergänge
+   18. Responsive (Mobile)
+   ============================================================ */
+
+
+/* ============================================================
+   1.  THEME VARIABLES
+   ============================================================
+   Kopiere diesen Block in dein Webflow Custom Code <head>
+   und überschreibe nur die Werte, die du ändern willst.
+
+   Beispiel für eine rote Brand-Farbe:
+   :root {
+     --msf-color-primary:       #E03030;
+     --msf-color-primary-hover: #C42424;
+     --msf-color-primary-light: #FEF2F2;
+     --msf-shadow-focus:        0 0 0 3px rgba(224,48,48,0.18);
+   }
+   ============================================================ */
+
+:root {
+  /* --- Brand --- */
+  --msf-color-primary:        #215BE3;
+  --msf-color-primary-hover:  #1749C2;
+  --msf-color-primary-light:  #E8F0FE;
+  --msf-color-primary-text:   #FFFFFF;   /* Text auf Primary-Buttons */
+
+  /* --- Hintergründe --- */
+  --msf-color-bg:             #FFFFFF;
+  --msf-color-surface:        #F8F9FC;   /* Feldbox, Card-Background */
+  --msf-color-surface-hover:  #F0F4FF;   /* Radio/Checkbox hover */
+
+  /* --- Ränder --- */
+  --msf-color-border:         #DDE1EA;
+  --msf-color-border-focus:   #215BE3;
+
+  /* --- Text --- */
+  --msf-color-text:           #1A1A2E;
+  --msf-color-text-muted:     #6B7280;
+  --msf-color-text-placeholder: #9CA3AF;
+
+  /* --- Zustände --- */
+  --msf-color-error:          #D62E2E;
+  --msf-color-error-bg:       #FEF2F2;
+  --msf-color-error-border:   #F5A0A0;
+  --msf-color-success:        #1A7F3C;
+  --msf-color-success-bg:     #E6F4EA;
+  --msf-color-success-border: #86EFAC;
+
+  /* --- Progress --- */
+  --msf-progress-track:       #E5E7EB;
+  --msf-progress-fill:        #215BE3;
+  --msf-progress-dot-size:    12px;
+  --msf-progress-dot-active:  #215BE3;
+  --msf-progress-dot-done:    #215BE3;
+  --msf-progress-dot-inactive:#DDE1EA;
+  --msf-progress-height:      6px;       /* Nur für Bar-Variante */
+
+  /* --- Typografie --- */
+  --msf-font-family:          system-ui, -apple-system, "Segoe UI", sans-serif;
+  --msf-font-size-xs:         0.75rem;   /* 12px */
+  --msf-font-size-sm:         0.875rem;  /* 14px */
+  --msf-font-size-base:       1rem;      /* 16px */
+  --msf-font-size-lg:         1.125rem;  /* 18px */
+  --msf-font-size-xl:         1.375rem;  /* 22px */
+  --msf-font-size-2xl:        1.75rem;   /* 28px */
+  --msf-font-weight-normal:   400;
+  --msf-font-weight-medium:   500;
+  --msf-font-weight-bold:     700;
+  --msf-line-height:          1.6;
+
+  /* --- Abstände --- */
+  --msf-spacing-xs:           0.25rem;   /*  4px */
+  --msf-spacing-sm:           0.5rem;    /*  8px */
+  --msf-spacing-md:           1rem;      /* 16px */
+  --msf-spacing-lg:           1.5rem;    /* 24px */
+  --msf-spacing-xl:           2rem;      /* 32px */
+  --msf-spacing-2xl:          3rem;      /* 48px */
+
+  /* --- Form-Wrapper --- */
+  --msf-max-width:            560px;
+  --msf-padding:              var(--msf-spacing-xl);
+  --msf-radius-sm:            6px;
+  --msf-radius-md:            10px;
+  --msf-radius-lg:            16px;
+  --msf-radius-full:          999px;
+
+  /* --- Input-Felder --- */
+  --msf-input-height:         48px;
+  --msf-input-padding-x:      var(--msf-spacing-md);
+  --msf-input-radius:         var(--msf-radius-md);
+  --msf-input-border-width:   1.5px;
+
+  /* --- Buttons --- */
+  --msf-btn-height:           48px;
+  --msf-btn-padding-x:        var(--msf-spacing-lg);
+  --msf-btn-radius:           var(--msf-radius-md);
+  --msf-btn-font-size:        var(--msf-font-size-base);
+  --msf-btn-font-weight:      var(--msf-font-weight-medium);
+
+  /* --- Bewegung --- */
+  --msf-transition:           180ms ease;
+  --msf-transition-slow:      360ms ease;
+  --msf-step-slide-distance:  24px;
+
+  /* --- Schatten --- */
+  --msf-shadow-sm:            0 1px 3px rgba(0, 0, 0, 0.07);
+  --msf-shadow-md:            0 4px 16px rgba(0, 0, 0, 0.09);
+  --msf-shadow-focus:         0 0 0 3px rgba(33, 91, 227, 0.18);
+}
+
+
+/* ============================================================
+   2.  RESET & BASE
+   ============================================================ */
+
+.msf-form *,
+.msf-form *::before,
+.msf-form *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.msf-form {
+  font-family:  var(--msf-font-family);
+  font-size:    var(--msf-font-size-base);
+  font-weight:  var(--msf-font-weight-normal);
+  line-height:  var(--msf-line-height);
+  color:        var(--msf-color-text);
+  background:   var(--msf-color-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+
+/* ============================================================
+   3.  FORM WRAPPER
+   ============================================================ */
+
+.msf-form {
+  width: 100%;
+  max-width: var(--msf-max-width);
+  margin: 0 auto;
+  padding: var(--msf-padding);
+}
+
+/* Optional: Card-Wrapper um das ganze Formular */
+.msf-form--card {
+  background:    var(--msf-color-bg);
+  border-radius: var(--msf-radius-lg);
+  box-shadow:    var(--msf-shadow-md);
+  border:        1px solid var(--msf-color-border);
+}
+
+
+/* ============================================================
+   4.  PROGRESS – BAR
+   Aktiviert durch <div class="msf-progress msf-progress--bar">
+   ============================================================ */
+
+.msf-progress {
+  margin-bottom: var(--msf-spacing-xl);
+}
+
+/* Track */
+.msf-progress--bar .msf-progress__track {
+  width:            100%;
+  height:           var(--msf-progress-height);
+  background:       var(--msf-progress-track);
+  border-radius:    var(--msf-radius-full);
+  overflow:         hidden;
+}
+
+/* Fill – Breite wird per JS als Inline-Style gesetzt: style="width: 60%" */
+.msf-progress--bar .msf-progress__fill {
+  height:           100%;
+  background:       var(--msf-progress-fill);
+  border-radius:    var(--msf-radius-full);
+  transition:       width var(--msf-transition-slow);
+}
+
+/* Optionale Label-Zeile über der Bar */
+.msf-progress__label {
+  display:          flex;
+  justify-content:  space-between;
+  align-items:      center;
+  margin-bottom:    var(--msf-spacing-sm);
+  font-size:        var(--msf-font-size-sm);
+  color:            var(--msf-color-text-muted);
+}
+
+.msf-progress__label-step {
+  font-weight: var(--msf-font-weight-medium);
+  color:       var(--msf-color-text);
+}
+
+
+/* ============================================================
+   5.  PROGRESS – DOTS
+   Aktiviert durch <div class="msf-progress msf-progress--dots">
+   ============================================================ */
+
+.msf-progress--dots .msf-progress__steps {
+  display:         flex;
+  align-items:     center;
+  gap:             0;
+}
+
+.msf-progress--dots .msf-progress__step {
+  display:         flex;
+  align-items:     center;
+  flex:            1;
+}
+
+.msf-progress--dots .msf-progress__step:last-child {
+  flex:            0;
+}
+
+/* Verbindungslinie zwischen Dots */
+.msf-progress--dots .msf-progress__step-line {
+  flex:            1;
+  height:          2px;
+  background:      var(--msf-progress-track);
+  transition:      background var(--msf-transition-slow);
+}
+
+.msf-progress--dots .msf-progress__step--done   .msf-progress__step-line,
+.msf-progress--dots .msf-progress__step--active .msf-progress__step-line {
+  background: var(--msf-progress-fill);
+}
+
+/* Dot */
+.msf-progress--dots .msf-progress__dot {
+  width:           var(--msf-progress-dot-size);
+  height:          var(--msf-progress-dot-size);
+  border-radius:   50%;
+  background:      var(--msf-progress-dot-inactive);
+  flex-shrink:     0;
+  transition:      background var(--msf-transition), transform var(--msf-transition);
+}
+
+.msf-progress--dots .msf-progress__step--active .msf-progress__dot {
+  background:  var(--msf-progress-dot-active);
+  transform:   scale(1.3);
+}
+
+.msf-progress--dots .msf-progress__step--done .msf-progress__dot {
+  background:  var(--msf-progress-dot-done);
+}
+
+
+/* ============================================================
+   6.  PROGRESS – NUMBERS
+   Aktiviert durch <div class="msf-progress msf-progress--numbers">
+   ============================================================ */
+
+.msf-progress--numbers .msf-progress__steps {
+  display:        flex;
+  align-items:    center;
+  gap:            0;
+}
+
+.msf-progress--numbers .msf-progress__step {
+  display:        flex;
+  align-items:    center;
+  flex:           1;
+}
+
+.msf-progress--numbers .msf-progress__step:last-child {
+  flex: 0;
+}
+
+/* Linie */
+.msf-progress--numbers .msf-progress__step-line {
+  flex:       1;
+  height:     2px;
+  background: var(--msf-progress-track);
+  transition: background var(--msf-transition-slow);
+}
+
+.msf-progress--numbers .msf-progress__step--done   .msf-progress__step-line {
+  background: var(--msf-progress-fill);
+}
+
+/* Nummer-Badge */
+.msf-progress--numbers .msf-progress__number {
+  width:           32px;
+  height:          32px;
+  border-radius:   50%;
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  font-size:       var(--msf-font-size-sm);
+  font-weight:     var(--msf-font-weight-bold);
+  flex-shrink:     0;
+  border:          2px solid var(--msf-progress-dot-inactive);
+  background:      var(--msf-color-bg);
+  color:           var(--msf-color-text-muted);
+  transition:      background var(--msf-transition),
+                   border-color var(--msf-transition),
+                   color var(--msf-transition);
+}
+
+.msf-progress--numbers .msf-progress__step--active .msf-progress__number {
+  background:    var(--msf-color-primary);
+  border-color:  var(--msf-color-primary);
+  color:         var(--msf-color-primary-text);
+  box-shadow:    var(--msf-shadow-focus);
+}
+
+.msf-progress--numbers .msf-progress__step--done .msf-progress__number {
+  background:    var(--msf-color-primary);
+  border-color:  var(--msf-color-primary);
+  color:         var(--msf-color-primary-text);
+}
+
+/* Checkmark für abgeschlossene Steps */
+.msf-progress--numbers .msf-progress__step--done .msf-progress__number::after {
+  content: "✓";
+}
+
+.msf-progress--numbers .msf-progress__step--done .msf-progress__number-text {
+  display: none;
+}
+
+
+/* ============================================================
+   7.  STEP CONTAINER
+   ============================================================ */
+
+.msf-steps {
+  position: relative;
+  overflow:  hidden;  /* Verhindert seitliches Herausgleiten */
+}
+
+.msf-step {
+  display: none;
+}
+
+.msf-step--active {
+  display: block;
+}
+
+/* Einblend-Animationen (Klassen per JS gesetzt) */
+.msf-step--enter {
+  animation: msf-slide-in var(--msf-transition-slow) forwards;
+}
+
+.msf-step--leave {
+  animation: msf-slide-out var(--msf-transition-slow) forwards;
+}
+
+.msf-step--enter-back {
+  animation: msf-slide-in-back var(--msf-transition-slow) forwards;
+}
+
+.msf-step--leave-back {
+  animation: msf-slide-out-back var(--msf-transition-slow) forwards;
+}
+
+
+/* ============================================================
+   8.  STEP HEADER
+   ============================================================ */
+
+.msf-step__header {
+  margin-bottom: var(--msf-spacing-lg);
+}
+
+.msf-step__title {
+  font-size:    var(--msf-font-size-xl);
+  font-weight:  var(--msf-font-weight-bold);
+  color:        var(--msf-color-text);
+  line-height:  1.3;
+  margin-bottom: var(--msf-spacing-xs);
+}
+
+.msf-step__description {
+  font-size:  var(--msf-font-size-base);
+  color:      var(--msf-color-text-muted);
+  line-height: var(--msf-line-height);
+}
+
+
+/* ============================================================
+   9.  FIELDS – LABEL & HINT
+   ============================================================ */
+
+.msf-field {
+  margin-bottom: var(--msf-spacing-lg);
+}
+
+.msf-label {
+  display:       block;
+  font-size:     var(--msf-font-size-sm);
+  font-weight:   var(--msf-font-weight-medium);
+  color:         var(--msf-color-text);
+  margin-bottom: var(--msf-spacing-xs);
+}
+
+.msf-label__required {
+  color:        var(--msf-color-primary);
+  margin-left:  var(--msf-spacing-xs);
+}
+
+.msf-hint {
+  font-size:    var(--msf-font-size-sm);
+  color:        var(--msf-color-text-muted);
+  margin-top:   var(--msf-spacing-xs);
+  line-height:  1.5;
+}
+
+
+/* ============================================================
+   10. FIELDS – TEXT, EMAIL, PHONE, TEXTAREA
+   ============================================================ */
+
+.msf-input,
+.msf-textarea {
+  display:        block;
+  width:          100%;
+  font-family:    var(--msf-font-family);
+  font-size:      var(--msf-font-size-base);
+  color:          var(--msf-color-text);
+  background:     var(--msf-color-bg);
+  border:         var(--msf-input-border-width) solid var(--msf-color-border);
+  border-radius:  var(--msf-input-radius);
+  padding:        0 var(--msf-input-padding-x);
+  height:         var(--msf-input-height);
+  outline:        none;
+  transition:     border-color var(--msf-transition), box-shadow var(--msf-transition);
+  appearance:     none;
+  -webkit-appearance: none;
+}
+
+.msf-input::placeholder,
+.msf-textarea::placeholder {
+  color: var(--msf-color-text-placeholder);
+}
+
+.msf-input:hover,
+.msf-textarea:hover {
+  border-color: #B0BACC;
+}
+
+.msf-input:focus,
+.msf-textarea:focus {
+  border-color: var(--msf-color-border-focus);
+  box-shadow:   var(--msf-shadow-focus);
+}
+
+.msf-textarea {
+  height:         auto;
+  min-height:     120px;
+  padding:        var(--msf-spacing-md) var(--msf-input-padding-x);
+  resize:         vertical;
+  line-height:    var(--msf-line-height);
+}
+
+/* Fehler-Zustand */
+.msf-input--error,
+.msf-textarea--error {
+  border-color: var(--msf-color-error-border);
+  background:   var(--msf-color-error-bg);
+}
+
+.msf-input--error:focus,
+.msf-textarea--error:focus {
+  border-color: var(--msf-color-error);
+  box-shadow:   0 0 0 3px rgba(214, 46, 46, 0.15);
+}
+
+
+/* ============================================================
+   11. FIELDS – SINGLE CHOICE (RADIO)
+   ============================================================ */
+
+.msf-choice-group {
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--msf-spacing-sm);
+}
+
+/* Horizontale Variante: class="msf-choice-group msf-choice-group--row" */
+.msf-choice-group--row {
+  flex-direction: row;
+  flex-wrap:      wrap;
+}
+
+.msf-choice {
+  position:       relative;
+}
+
+/* Das native Input verstecken, aber zugänglich lassen */
+.msf-choice__input {
+  position:   absolute;
+  opacity:    0;
+  width:      0;
+  height:     0;
+  pointer-events: none;
+}
+
+.msf-choice__label {
+  display:        flex;
+  align-items:    center;
+  gap:            var(--msf-spacing-md);
+  padding:        var(--msf-spacing-md) var(--msf-spacing-md);
+  background:     var(--msf-color-surface);
+  border:         var(--msf-input-border-width) solid var(--msf-color-border);
+  border-radius:  var(--msf-input-radius);
+  cursor:         pointer;
+  font-size:      var(--msf-font-size-base);
+  color:          var(--msf-color-text);
+  transition:     border-color var(--msf-transition),
+                  background   var(--msf-transition),
+                  box-shadow   var(--msf-transition);
+  user-select:    none;
+}
+
+.msf-choice__label:hover {
+  background:   var(--msf-color-surface-hover);
+  border-color: var(--msf-color-primary);
+}
+
+/* Aktiv / ausgewählt */
+.msf-choice__input:checked + .msf-choice__label {
+  background:   var(--msf-color-primary-light);
+  border-color: var(--msf-color-primary);
+  color:        var(--msf-color-primary);
+  font-weight:  var(--msf-font-weight-medium);
+}
+
+/* Fokus-Ring für Keyboard-Navigation */
+.msf-choice__input:focus-visible + .msf-choice__label {
+  box-shadow: var(--msf-shadow-focus);
+}
+
+/* Custom Radio-Indikator (optional, per JS oder per CSS :before) */
+.msf-choice__indicator {
+  width:          18px;
+  height:         18px;
+  flex-shrink:    0;
+  border-radius:  50%;
+  border:         2px solid var(--msf-color-border);
+  background:     var(--msf-color-bg);
+  transition:     border-color var(--msf-transition), background var(--msf-transition);
+  display:        flex;
+  align-items:    center;
+  justify-content: center;
+}
+
+.msf-choice__input:checked + .msf-choice__label .msf-choice__indicator {
+  border-color: var(--msf-color-primary);
+  background:   var(--msf-color-primary);
+}
+
+.msf-choice__input:checked + .msf-choice__label .msf-choice__indicator::after {
+  content:      '';
+  width:        6px;
+  height:       6px;
+  border-radius: 50%;
+  background:   var(--msf-color-primary-text);
+}
+
+.msf-choice__text {
+  flex: 1;
+}
+
+/* Optionale Beschreibung unter dem Label-Text */
+.msf-choice__description {
+  display:     block;
+  font-size:   var(--msf-font-size-sm);
+  color:       var(--msf-color-text-muted);
+  font-weight: var(--msf-font-weight-normal);
+  margin-top:  2px;
+}
+
+.msf-choice__input:checked + .msf-choice__label .msf-choice__description {
+  color: var(--msf-color-primary);
+  opacity: 0.8;
+}
+
+
+/* ============================================================
+   12. FIELDS – MULTI CHOICE (CHECKBOX)
+   ============================================================ */
+
+/* Gleiche Struktur wie Radio, nur Indikator ist quadratisch */
+
+.msf-checkbox .msf-choice__indicator {
+  border-radius: var(--msf-radius-sm);
+}
+
+.msf-checkbox .msf-choice__input:checked + .msf-choice__label .msf-choice__indicator::after {
+  content:  '';
+  width:    10px;
+  height:   6px;
+  border:   2px solid var(--msf-color-primary-text);
+  border-top:   none;
+  border-right: none;
+  transform: rotate(-45deg) translateY(-1px);
+  border-radius: 0;
+  background: transparent;
+}
+
+.msf-checkbox .msf-choice__input:checked + .msf-choice__label .msf-choice__indicator {
+  border-color: var(--msf-color-primary);
+  background:   var(--msf-color-primary);
+}
+
+
+/* ============================================================
+   13. FIELDS – VALIDATION & ERROR MESSAGES
+   ============================================================ */
+
+.msf-error {
+  display:      flex;
+  align-items:  flex-start;
+  gap:          var(--msf-spacing-xs);
+  font-size:    var(--msf-font-size-sm);
+  color:        var(--msf-color-error);
+  margin-top:   var(--msf-spacing-sm);
+  line-height:  1.4;
+}
+
+/* Optionales Icon vor der Fehlermeldung */
+.msf-error::before {
+  content:     '⚠';
+  flex-shrink: 0;
+  font-size:   var(--msf-font-size-xs);
+  margin-top:  1px;
+}
+
+/* aria-live container – immer im DOM, nur sichtbar wenn Inhalt da */
+[aria-live="polite"].msf-error:empty {
+  display: none;
+}
+
+/* Fehler-Rahmen um eine ganze Choice-Gruppe */
+.msf-choice-group--error .msf-choice__label {
+  border-color: var(--msf-color-error-border);
+}
+
+
+/* ============================================================
+   14. BUTTONS
+   ============================================================ */
+
+.msf-actions {
+  display:         flex;
+  align-items:     center;
+  justify-content: space-between;
+  gap:             var(--msf-spacing-md);
+  margin-top:      var(--msf-spacing-xl);
+  flex-wrap:       wrap;
+}
+
+/* Wenn es nur einen Button gibt (kein Back), nach rechts */
+.msf-actions--end {
+  justify-content: flex-end;
+}
+
+/* Basis-Button-Reset */
+.msf-btn {
+  display:         inline-flex;
+  align-items:     center;
+  justify-content: center;
+  gap:             var(--msf-spacing-sm);
+  height:          var(--msf-btn-height);
+  padding:         0 var(--msf-btn-padding-x);
+  border-radius:   var(--msf-btn-radius);
+  font-family:     var(--msf-font-family);
+  font-size:       var(--msf-btn-font-size);
+  font-weight:     var(--msf-btn-font-weight);
+  line-height:     1;
+  cursor:          pointer;
+  border:          none;
+  outline:         none;
+  text-decoration: none;
+  transition:      background var(--msf-transition),
+                   color       var(--msf-transition),
+                   box-shadow  var(--msf-transition),
+                   transform   var(--msf-transition);
+  user-select:     none;
+  white-space:     nowrap;
+}
+
+.msf-btn:active {
+  transform: translateY(1px);
+}
+
+.msf-btn:focus-visible {
+  box-shadow: var(--msf-shadow-focus);
+}
+
+/* Primary (Next, Submit) */
+.msf-btn--primary {
+  background: var(--msf-color-primary);
+  color:      var(--msf-color-primary-text);
+}
+
+.msf-btn--primary:hover {
+  background: var(--msf-color-primary-hover);
+}
+
+/* Ghost (Back) */
+.msf-btn--ghost {
+  background:   transparent;
+  color:        var(--msf-color-text-muted);
+  border:       var(--msf-input-border-width) solid var(--msf-color-border);
+}
+
+.msf-btn--ghost:hover {
+  background:   var(--msf-color-surface);
+  color:        var(--msf-color-text);
+  border-color: #B0BACC;
+}
+
+/* Loading-Zustand */
+.msf-btn--loading {
+  pointer-events: none;
+  opacity:        0.75;
+}
+
+.msf-btn--loading .msf-btn__text {
+  visibility: hidden;
+}
+
+.msf-btn--loading::after {
+  content:            '';
+  position:           absolute;
+  width:              18px;
+  height:             18px;
+  border:             2px solid transparent;
+  border-top-color:   currentColor;
+  border-radius:      50%;
+  animation:          msf-spin 0.6s linear infinite;
+}
+
+/* Submit-Button bekommt volle Breite wenn allein */
+.msf-actions--end .msf-btn--primary {
+  min-width: 160px;
+}
+
+
+/* ============================================================
+   15. SUMMARY STEP
+   ============================================================ */
+
+.msf-summary {
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--msf-spacing-sm);
+}
+
+.msf-summary__group {
+  background:    var(--msf-color-surface);
+  border:        1px solid var(--msf-color-border);
+  border-radius: var(--msf-radius-md);
+  overflow:      hidden;
+}
+
+.msf-summary__group-title {
+  font-size:     var(--msf-font-size-sm);
+  font-weight:   var(--msf-font-weight-bold);
+  color:         var(--msf-color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding:       var(--msf-spacing-sm) var(--msf-spacing-md);
+  background:    var(--msf-color-border);
+}
+
+.msf-summary__row {
+  display:       flex;
+  align-items:   baseline;
+  gap:           var(--msf-spacing-md);
+  padding:       var(--msf-spacing-sm) var(--msf-spacing-md);
+  border-bottom: 1px solid var(--msf-color-border);
+}
+
+.msf-summary__row:last-child {
+  border-bottom: none;
+}
+
+.msf-summary__key {
+  font-size:    var(--msf-font-size-sm);
+  color:        var(--msf-color-text-muted);
+  min-width:    120px;
+  flex-shrink:  0;
+}
+
+.msf-summary__value {
+  font-size:    var(--msf-font-size-base);
+  color:        var(--msf-color-text);
+  font-weight:  var(--msf-font-weight-medium);
+}
+
+/* Edit-Link pro Zeile */
+.msf-summary__edit {
+  margin-left:  auto;
+  font-size:    var(--msf-font-size-sm);
+  color:        var(--msf-color-primary);
+  cursor:       pointer;
+  text-decoration: none;
+  flex-shrink:  0;
+}
+
+.msf-summary__edit:hover {
+  text-decoration: underline;
+}
+
+
+/* ============================================================
+   16. SUCCESS STEP
+   ============================================================ */
+
+.msf-success {
+  display:        flex;
+  flex-direction: column;
+  align-items:    center;
+  text-align:     center;
+  padding:        var(--msf-spacing-2xl) var(--msf-spacing-xl);
+  animation:      msf-fade-in var(--msf-transition-slow) forwards;
+}
+
+.msf-success__icon {
+  width:           64px;
+  height:          64px;
+  border-radius:   50%;
+  background:      var(--msf-color-success-bg);
+  border:          2px solid var(--msf-color-success-border);
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  font-size:       28px;
+  margin-bottom:   var(--msf-spacing-lg);
+  animation:       msf-pop var(--msf-transition-slow) cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.msf-success__title {
+  font-size:     var(--msf-font-size-2xl);
+  font-weight:   var(--msf-font-weight-bold);
+  color:         var(--msf-color-text);
+  margin-bottom: var(--msf-spacing-sm);
+  line-height:   1.3;
+}
+
+.msf-success__message {
+  font-size:     var(--msf-font-size-base);
+  color:         var(--msf-color-text-muted);
+  max-width:     380px;
+  line-height:   var(--msf-line-height);
+  margin-bottom: var(--msf-spacing-xl);
+}
+
+/* Optionaler CTA-Button im Success-Screen */
+.msf-success__cta {
+  /* erbt .msf-btn .msf-btn--primary */
+}
+
+
+/* ============================================================
+   17. ANIMATIONEN & ÜBERGÄNGE
+   ============================================================ */
+
+/* Vorwärts – neuer Step von rechts rein */
+@keyframes msf-slide-in {
+  from {
+    opacity:   0;
+    transform: translateX(var(--msf-step-slide-distance));
+  }
+  to {
+    opacity:   1;
+    transform: translateX(0);
+  }
+}
+
+/* Vorwärts – alter Step nach links raus */
+@keyframes msf-slide-out {
+  from {
+    opacity:   1;
+    transform: translateX(0);
+  }
+  to {
+    opacity:   0;
+    transform: translateX(calc(var(--msf-step-slide-distance) * -1));
+  }
+}
+
+/* Rückwärts – neuer Step von links rein */
+@keyframes msf-slide-in-back {
+  from {
+    opacity:   0;
+    transform: translateX(calc(var(--msf-step-slide-distance) * -1));
+  }
+  to {
+    opacity:   1;
+    transform: translateX(0);
+  }
+}
+
+/* Rückwärts – alter Step nach rechts raus */
+@keyframes msf-slide-out-back {
+  from {
+    opacity:   1;
+    transform: translateX(0);
+  }
+  to {
+    opacity:   0;
+    transform: translateX(var(--msf-step-slide-distance));
+  }
+}
+
+/* Success-Icon Pop */
+@keyframes msf-pop {
+  from {
+    opacity:   0;
+    transform: scale(0.6);
+  }
+  to {
+    opacity:   1;
+    transform: scale(1);
+  }
+}
+
+/* Success-Screen Fade */
+@keyframes msf-fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Button Loading Spinner */
+@keyframes msf-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Reduzierte Bewegung respektieren */
+@media (prefers-reduced-motion: reduce) {
+  .msf-step--enter,
+  .msf-step--leave,
+  .msf-step--enter-back,
+  .msf-step--leave-back,
+  .msf-success,
+  .msf-success__icon {
+    animation: none;
+  }
+
+  .msf-progress--bar .msf-progress__fill,
+  .msf-btn,
+  .msf-input,
+  .msf-textarea,
+  .msf-choice__label,
+  .msf-choice__indicator {
+    transition: none;
+  }
+}
+
+
+/* ============================================================
+   18. RESPONSIVE (MOBILE)
+   ============================================================ */
+
+@media (max-width: 600px) {
+  .msf-form {
+    padding: var(--msf-spacing-lg);
+  }
+
+  .msf-step__title {
+    font-size: var(--msf-font-size-lg);
+  }
+
+  .msf-actions {
+    flex-direction: column-reverse;
+    gap:            var(--msf-spacing-sm);
+  }
+
+  .msf-btn {
+    width: 100%;
+  }
+
+  .msf-choice-group--row {
+    flex-direction: column;
+  }
+
+  .msf-summary__key {
+    min-width: 90px;
+  }
+}
+
+@media (max-width: 400px) {
+  .msf-form {
+    padding: var(--msf-spacing-md);
+  }
+}
