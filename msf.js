@@ -177,6 +177,11 @@
       return;
     }
 
+    if (!state.config.steps || !state.config.steps.length) {
+      console.warn("MSF: steps-Array ist leer. Uebergib steps: [...] in MSF.init().");
+      return;
+    }
+
     state.config.steps.forEach(function (step, index) {
       // Fieldset erstellen
       var fieldset = document.createElement("fieldset");
